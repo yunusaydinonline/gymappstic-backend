@@ -55,8 +55,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     """User model"""
     username = models.CharField(max_length=100, unique=True)
     email = models.CharField(max_length=100, unique=True)
-    name = models.CharField(max_length=100)
-    surname = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    surname = models.CharField(max_length=100, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_apiuser = models.BooleanField(default=False)
