@@ -1,7 +1,12 @@
 """
 DB Models implemented with Django ORM
 """
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin
+)
+from django.utils.translation import gettext_lazy as t
 from django.db import models
 
 
@@ -10,11 +15,11 @@ class UserManager(BaseUserManager):
         """Create and return saved user"""
 
         if not username:
-            raise ValueError('Username must not be empty or None')
+            raise ValueError(t('Username must not be empty or None'))
         elif not email:
-            raise ValueError('Email must not be empty or None')
+            raise ValueError(t('Email must not be empty or None'))
         elif not password:
-            raise ValueError('Password must not be empty or None')
+            raise ValueError(t('Password must not be empty or None'))
 
         user = self.model(
             username=username,
@@ -46,7 +51,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     """User model"""
     username = models.CharField(max_length=100, unique=True)
     email = models.CharField(max_length=100, unique=True)
@@ -55,11 +60,11 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_apiuser = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return f'{self.username}'
